@@ -1,10 +1,12 @@
-import { Button } from "antd";
 import AppRoutes from "./Routes/AppRoutes";
 import "./Styles/App.less";
+import { ContextProvider } from "./Utils/UserContext";
 function App() {
   return (
     <>
-      <AppRoutes />
+      <ContextProvider>
+        <AppRoutes />
+      </ContextProvider>
     </>
   );
 }
