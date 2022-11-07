@@ -8,11 +8,11 @@ export const TaskProvider = ({ children }) => {
   const [initialTask, setInitialTask] = useState([]);
   const [showLoader, setShowLoader] = useState(false);
 
-  const addItemApi = async (postItem) => {
+  const addItem = async (postItem) => {
     //adding post api
     try {
       setShowLoader(true);
-      const response = await fetch("http://localhost:5000/api/tasks/post-tasks", {
+      const response = await fetch("", {
         method: "POST",
         body: JSON.stringify(postItem),
         headers: {
@@ -37,7 +37,7 @@ export const TaskProvider = ({ children }) => {
       setShowLoader(true);
       const deletedItem = initialTask.find((el) => el.id === taskID);
 
-      const response = await fetch(`http://localhost:5000/api/tasks/delete-task/${taskID}`, {
+      const response = await fetch(``, {
         method: "PATCH",
         body: JSON.stringify(deletedItem),
         headers: {
@@ -66,7 +66,7 @@ export const TaskProvider = ({ children }) => {
   const getTasks = async () => {
     try {
       setShowLoader(true);
-      const response = await fetch("http://localhost:5000/api/tasks/get-tasks");
+      const response = await fetch("");
       const data = await response.json();
       const items = data.filter((el) => el.is_deleted === false);
       setInitialTask(items);
@@ -80,7 +80,7 @@ export const TaskProvider = ({ children }) => {
 
   const updateApi = async (updatedTask, item) => {
     setShowLoader(true);
-    const response = await fetch(`http://localhost:5000/api/tasks/update-task/${item.id}`, {
+    const response = await fetch(``, {
       method: "PATCH",
       body: JSON.stringify(updatedTask),
       headers: {
@@ -104,7 +104,7 @@ export const TaskProvider = ({ children }) => {
       setShowLoader(true);
       const redoItem = await deletedTask.find((el) => el.id === taskID);
 
-      const response = await fetch(`http://localhost:5000/api/tasks/redo-task/${taskID}`, {
+      const response = await fetch(``, {
         method: "PATCH",
         body: JSON.stringify(redoItem),
         headers: {
@@ -133,7 +133,7 @@ export const TaskProvider = ({ children }) => {
   const removeTrash = async (id) => {
     try {
       setShowLoader(true);
-      await fetch(`http://localhost:5000/api/tasks/delete-tash/${id}`, {
+      await fetch(``, {
         method: "DELETE",
       });
       const filteredItem = deletedTask.filter((el) => el.id !== id);
@@ -158,7 +158,7 @@ export const TaskProvider = ({ children }) => {
         redo,
         removeTrash,
         updateApi,
-        addItemApi,
+        addItem,
       }}>
       {children}
     </TaskContext.Provider>

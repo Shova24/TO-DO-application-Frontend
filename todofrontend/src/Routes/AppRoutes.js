@@ -9,6 +9,7 @@ import TaskList from "../Pages/TasksPages/TaskList";
 import DeletedTaskList from "../Pages/TasksPages/DeletedTaskList";
 import BaseLayout from "../Layoutes/BaseLayout";
 import AuthLayOut from "../Layoutes/AuthLayout";
+import PageNotFount from "../Pages/PageNotFound";
 
 export default function AppRoutes() {
   return (
@@ -32,6 +33,14 @@ export default function AppRoutes() {
             </BaseLayout>
           }
           path="/deleted-tasks"
+        />
+        <Route
+          element={
+            <BaseLayout>
+              <PageNotFount />
+            </BaseLayout>
+          }
+          path="*"
         />
       </Route>
       <Route

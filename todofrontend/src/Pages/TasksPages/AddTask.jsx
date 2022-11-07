@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Input, Button, Radio, TimePicker, DatePicker, Form, Row, Col, notification, Card } from "antd";
 import TaskContext from "../../Utils/TaskContext";
+import moment from "moment";
 
 const { TextArea } = Input;
 const rating = ["High", "Medium", "Low"];
@@ -8,7 +9,27 @@ const rating = ["High", "Medium", "Low"];
 export default function AddTask() {
   const { addItemApi } = useContext(TaskContext);
   const [form] = Form.useForm();
-  const addItem = (values) => {};
+
+  const addItem = async (values) => {
+    const dateTime = moment(values?.deadlineDate).format("YYYY-MM-DD HH:mm:ss");
+    const date = dateTime.split(" ")[0];
+    const time = dateTime.split(" ")[1];
+    const postTask = {
+      taskName: values?.taskName,
+      priority: values?.priority,
+      deadlineDate: date,
+      deadlineTime: time,
+      is_deleted: false,
+    };
+
+    console.log(postTask);
+    console.log("====================================");
+  };
+
+  const onOk = (value) => {
+    // console.log("onOk: ", value);
+    // console.log("====================================");
+  };
   return (
     <Card style={{ border: "none" }}>
       <Form form={form} layout="horizontal" onFinish={addItem}>
@@ -18,7 +39,7 @@ export default function AddTask() {
               <TextArea />
             </Form.Item>
           </Col>
-          <Col xs={24} md={8}>
+          <Col xs={24} md={12}>
             <Form.Item name="priority" label="Priority">
               <Radio.Group>
                 {rating.map((el) => (
@@ -29,14 +50,9 @@ export default function AddTask() {
               </Radio.Group>
             </Form.Item>
           </Col>
-          <Col xs={24} md={8}>
+          <Col xs={24} md={12}>
             <Form.Item name="deadlineDate" label="Deadline Date">
-              <DatePicker style={{ width: "100%" }} />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={8}>
-            <Form.Item name="deadlineRange" label="Time">
-              <TimePicker.RangePicker />
+              <DatePicker showTime onOk={onOk} style={{ width: "100%" }} />
             </Form.Item>
           </Col>
         </Row>

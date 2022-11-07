@@ -54,6 +54,10 @@ export default function Register() {
           name="password"
           rules={[
             {
+              pattern: /[!@#$%^&*(),.?":{}|<>]/g,
+              message: `Special charecter`,
+            },
+            {
               required: true,
               message: "Please input your password!",
             },
@@ -66,11 +70,11 @@ export default function Register() {
               message: `a-z`,
             },
             {
-              pattern: /(?=.*\d)/,
+              pattern: /\d/,
               message: `number`,
             },
             {
-              pattern: /[a-zA-Z0-9!*#$%&?]{4,}/,
+              pattern: /[a-zA-Z0-9!*#$%&?]{8,}/,
               // pattern: /[A-Za-z\d]{8,}/,
               message: `Minimum length - 8`,
             },
@@ -78,10 +82,7 @@ export default function Register() {
             //   pattern: /^(?=.*[*.!@$%^&(){}[]:;<>,.?/~_+-=|\])$/,
             //   message: `Special charecter`,
             // },
-            {
-              pattern: /(?=.*[a-zA-Z >>!#$%&? "<<])[a-zA-Z0-9 >>!#$%&?<< ]/g,
-              message: `Special charecter`,
-            },
+
             // {
             //   pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/,
 
