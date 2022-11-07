@@ -1,8 +1,9 @@
-import { Card, Layout, Typography, Menu } from "antd";
+import { Card, Layout, Typography, Menu, Row, Col } from "antd";
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
+import { Notification } from "../Components/Notification";
 const { Header, Footer, Content } = Layout;
-const { Title } = Typography;
+const { Title, Text } = Typography;
 export default function BaseLayout({ children }) {
   const location = useLocation();
   const [currentKey, setCurrentKey] = useState("");
@@ -10,14 +11,30 @@ export default function BaseLayout({ children }) {
   useEffect(() => {
     setCurrentKey(location.pathname);
   }, [location.pathname]);
-  console.log("====================================");
-  console.log("Current Key : ", currentKey);
-  console.log("====================================");
+
+  const userLogout = async () => {
+    localStorage.setItem("token", null);
+    Notification("User Logged Out");
+    const token = localStorage.getItem("token");
+    console.log(token);
+  };
 
   return (
     <Layout>
-      <Header style={{ display: "flex", justifyContent: "center" }}>
-        <Title style={{ color: "White" }}>TODO App</Title>
+      <Header>
+        <Row>
+          <Col span={8}>
+            <Title style={{ color: "White" }}>TODO App</Title>
+          </Col>
+          <Col span={8}></Col>
+          <Col span={8}>
+            <Text style={{ color: "White", float: "right" }}>
+              <Link to="/login" onClick={userLogout}>
+                Logout
+              </Link>
+            </Text>
+          </Col>
+        </Row>
       </Header>
       <Content style={{ minHeight: " 100vh" }}>
         <Menu mode="horizontal" defaultSelectedKeys={[currentKey]} style={{ display: "flex", justifyContent: "center" }}>

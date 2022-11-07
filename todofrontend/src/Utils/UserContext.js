@@ -21,12 +21,32 @@ const ContextProvider = ({ children }) => {
       Notification(error.response.data.message);
     }
   };
-  const getUsers = async () => {};
-  const userLogin = async (values) => {};
-  const userLogout = async () => {};
-  const deleteUser = async () => {};
-  const updateUser = async () => {};
-  return <userContext.Provider value={{ createNewUser, user, getUsers, userLogin, userLogout, deleteUser, updateUser }}>{children}</userContext.Provider>;
+  const userLogin = async (values) => {
+    try {
+      const response = await AuthAPI.post("/users/login", values);
+      console.log("====================================");
+      console.log(response?.data?.message);
+      if (response?.data?.message === "User not found") {
+        Notification("User not found");
+        return;
+      }
+      if (response?.data?.message === "Password not matched!!!") {
+        Notification("Password not matched!!!");
+        return;
+      }
+      const token = response.data.token;
+      console.log(response?.data?.token);
+      localStorage.setItem("token", token);
+      Notification("Logged In!!!");
+      navigate("/");
+      return;
+    } catch (error) {
+      console.log(error.response);
+      Notification(error.response);
+    }
+  };
+
+  return <userContext.Provider value={{ createNewUser, userLogin }}>{children}</userContext.Provider>;
 };
 
 export { userContext, ContextProvider };

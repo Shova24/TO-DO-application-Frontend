@@ -5,7 +5,7 @@ import { userContext } from "../../Utils/UserContext";
 
 export default function Login() {
   const [form] = Form.useForm();
-  const { userLogout } = useContext(userContext);
+  const { userLogin } = useContext(userContext);
   return (
     <Card style={{ margin: "25px", border: "none" }}>
       <Divider>Login</Divider>
@@ -22,7 +22,7 @@ export default function Login() {
           remember: true,
         }}
         labelWrap="true"
-        onFinish={userLogout}>
+        onFinish={userLogin}>
         {/* onFinish={login}> */}
         <Form.Item
           label="Email"

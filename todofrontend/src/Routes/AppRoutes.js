@@ -54,6 +54,14 @@ export default function AppRoutes() {
       <Route
         element={
           <AuthLayOut>
+            <Login />
+          </AuthLayOut>
+        }
+        path="/logout"
+      />
+      <Route
+        element={
+          <AuthLayOut>
             <Register />
           </AuthLayOut>
         }

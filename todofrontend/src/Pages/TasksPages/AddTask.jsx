@@ -1,30 +1,13 @@
 import React, { useContext } from "react";
 import { Input, Button, Radio, TimePicker, DatePicker, Form, Row, Col, notification, Card } from "antd";
 import TaskContext from "../../Utils/TaskContext";
-import moment from "moment";
 
 const { TextArea } = Input;
 const rating = ["High", "Medium", "Low"];
 
 export default function AddTask() {
-  const { addItemApi } = useContext(TaskContext);
+  const { addItem } = useContext(TaskContext);
   const [form] = Form.useForm();
-
-  const addItem = async (values) => {
-    const dateTime = moment(values?.deadlineDate).format("YYYY-MM-DD HH:mm:ss");
-    const date = dateTime.split(" ")[0];
-    const time = dateTime.split(" ")[1];
-    const postTask = {
-      taskName: values?.taskName,
-      priority: values?.priority,
-      deadlineDate: date,
-      deadlineTime: time,
-      is_deleted: false,
-    };
-
-    console.log(postTask);
-    console.log("====================================");
-  };
 
   const onOk = (value) => {
     // console.log("onOk: ", value);
