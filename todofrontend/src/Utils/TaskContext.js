@@ -1,8 +1,9 @@
 import { createContext, useEffect, useState } from "react";
-import { notification } from "antd";
-import { BaseAPI } from "./Api";
-
+import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
+
+import { BaseAPI } from "./Api";
+import { Notification } from "../Components/Notification";
 
 const TaskContext = createContext();
 
@@ -13,37 +14,34 @@ export const TaskProvider = ({ children }) => {
 
   const addItem = async (values) => {
     try {
-      const dateTime = moment(values?.deadlineDate).format("YYYY-MM-DD HH:mm:ss");
-      const date = dateTime.split(" ")[0];
-      const time = dateTime.split(" ")[1];
+      setShowLoader(true);
       const postTask = {
+        id: uuidv4(),
         taskName: values?.taskName,
         priority: values?.priority,
-        deadlineDate: date,
-        deadlineTime: time,
+        deadlineDate: moment(values?.deadlineDate).format("YYYY-MM-DD"),
+        deadlineTime: moment(values?.deadlineDate).format("HH:mm:ss"),
         is_deleted: false,
       };
-      const response = await BaseAPI.post("/task/post-task", postTask);
-      console.log(response);
-      setInitialTask([...initialTask, postTask]);
 
-      console.log(postTask);
-      console.log("====================================");
+      await BaseAPI.post("/task/post-task", postTask);
+      setInitialTask([...initialTask, postTask]);
+      Notification("Task Added");
+      setShowLoader(false);
     } catch (error) {
       console.log(error.message);
     }
   };
   const getTasks = async () => {
     try {
-      // setShowLoader(true);
+      setShowLoader(true);
       const response = await BaseAPI.get("/task/get-tasks");
-      console.log("Response Task : ", response.data.message);
       const data = response.data.message;
       const items = data.filter((el) => el.is_deleted === false);
       setInitialTask(items);
       const deletedItems = data.filter((el) => el.is_deleted === true);
       setDeletedTask(deletedItems);
-      // setShowLoader(false);
+      setShowLoader(false);
     } catch (error) {
       console.log("Something went wrong : ", error.message);
     }
@@ -51,16 +49,14 @@ export const TaskProvider = ({ children }) => {
 
   const deleteTask = async (taskID) => {
     try {
-      // setShowLoader(true);
+      setShowLoader(true);
       const deletedItem = initialTask.find((el) => el.id === taskID);
       await BaseAPI.patch(`task/update-in-trash/${taskID}`);
       setDeletedTask([...deletedTask, deletedItem]);
       const initialItems = initialTask.filter((el) => el.id !== deletedItem.id);
       setInitialTask(initialItems);
-      notification.open({
-        message: "Task Deleted",
-      });
-      // setShowLoader(false);
+      Notification("Task Deleted");
+      setShowLoader(false);
       return;
     } catch (error) {
       console.log("Error : ", error.message);
@@ -69,37 +65,35 @@ export const TaskProvider = ({ children }) => {
 
   const updateApi = async (updatedTask, item) => {
     // setShowLoader(true);
-    const response = await fetch(``, {
-      method: "PATCH",
-      body: JSON.stringify(updatedTask),
-      headers: {
-        "Content-type": "application/json",
-      },
-    });
-    console.log(response.status);
-    if (response.status === 200) {
-      const data = await response.json();
-      setInitialTask(data);
-      // setShowLoader(false);
-      return;
-    } else {
-      // setShowLoader(false);
-      return await Promise.reject(response);
-    }
+    // const response = await fetch(``, {
+    //   method: "PATCH",
+    //   body: JSON.stringify(updatedTask),
+    //   headers: {
+    //     "Content-type": "application/json",
+    //   },
+    // });
+    // console.log(response.status);
+    // if (response.status === 200) {
+    //   const data = await response.json();
+    //   setInitialTask(data);
+    //   // setShowLoader(false);
+    //   return;
+    // } else {
+    //   // setShowLoader(false);
+    //   return await Promise.reject(response);
+    // }
   };
 
   const redo = async (taskID) => {
     try {
-      // setShowLoader(true);
+      setShowLoader(true);
       const redoItem = await deletedTask.find((el) => el.id === taskID);
       await BaseAPI.patch(`task/redo-task/${taskID}`);
       setInitialTask([...initialTask, redoItem]);
       const deletedItems = deletedTask.filter((el) => el.id !== redoItem.id);
       setDeletedTask(deletedItems);
-      notification.open({
-        message: "Task Restored",
-      });
-      // setShowLoader(false);
+      Notification("Task Restored");
+      setShowLoader(false);
       return;
     } catch {
       console.log("Something not quite right");
@@ -108,12 +102,12 @@ export const TaskProvider = ({ children }) => {
 
   const removeTrash = async (id) => {
     try {
-      // setShowLoader(true);
+      setShowLoader(true);
       await BaseAPI.delete(`task/delete-task/${id}`);
       const filteredItem = deletedTask.filter((el) => el.id !== id);
       setDeletedTask(filteredItem);
-
-      // setShowLoader(false);
+      Notification("This task has been permanently deleted!");
+      setShowLoader(false);
     } catch {
       console.log("Something not quite right");
     }

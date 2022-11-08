@@ -22,38 +22,42 @@ export default function TaskItem({ item }) {
   };
 
   const editTask = (task) => {
-    const str1 = `${task.deadlineDate} ${task.starts}`;
-    const str2 = `${task.deadlineDate} ${task.ends}`;
+    console.log("====================================");
+    console.log("Task Time: ", task.deadlineTime);
+    console.log("====================================");
     form.setFieldsValue({
-      taskName: task.taskName,
-      priority: task.priority,
-      deadlineDate: moment(task.deadlineDate),
-      // deadlineRange: [moment(task.starts), moment(task.ends)],
-      deadlineRange: [moment(str1), moment(str2)],
-      // deadlineRange: [moment("2020-03-09 13:00"), moment("2020-03-27 13:17")],
+      taskName: task?.taskName,
+      priority: task?.priority,
+      deadlineDate: moment(task?.deadlineDate),
+      deadlineTime: moment(task?.deadlineTime),
     });
     setIsModalVisible(true);
   };
 
   const onFinish = (values) => {
     const id = item.id;
+    console.log("Updated Task : ", moment(values?.deadlineDate).format("YYYY-MM-DD"));
+    console.log("Updated Task : ", moment(values?.deadlineDate).format("HH:mm:ss"));
     const updatedTask = {
       id: id,
       taskName: values.taskName,
       priority: values.priority,
       deadlineDate: values.deadlineDate,
-      deadlineRange: [moment(values.deadlineRange[0]), moment(values.deadlineRange[1])],
+      deadlineTime: values.deadlineTime,
+      // deadlineRange: [moment(values.deadlineRange[0]), moment(values.deadlineRange[1])],
     };
-    updateApi(updatedTask, item);
+    // console.log(updatedTask);
+    // updateApi(updatedTask, item);
 
-    const leftItems = initialTask?.filter((el) => el?.id !== item?.id);
-    setInitialTask([updatedTask, ...leftItems]);
-    form.resetFields();
-    notification.open({
-      message: "Task Updated",
-    });
+    // const leftItems = initialTask?.filter((el) => el?.id !== item?.id);
+    // setInitialTask([updatedTask, ...leftItems]);
+    // form.resetFields();
+    // notification.open({
+    //   message: "Task Updated",
+    // });
     setIsModalVisible(false);
   };
+
   return (
     <>
       <Card style={{ borderRadius: "20px" }}>
@@ -70,19 +74,19 @@ export default function TaskItem({ item }) {
               </Col>
               <Col>
                 <Popconfirm title="Do you want to delete this task Permanently ?" onConfirm={() => removeTrash(item.id)} okText="Yes" cancelText="No">
-                  <CloseOutlined />
+                  <CloseOutlined twoToneColor="#eb2f96" />
                 </Popconfirm>
               </Col>
             </>
           ) : (
             <>
               <Col>
+                <EditOutlined onClick={() => editTask(item)} />
+              </Col>
+              <Col>
                 <Popconfirm title="Do you want to delete this task ?" onConfirm={() => deleteTask(item.id)} okText="Yes" cancelText="No">
                   <CloseOutlined />
                 </Popconfirm>
-              </Col>
-              <Col>
-                <EditOutlined onClick={() => editTask(item)} />
               </Col>
             </>
           )}
@@ -102,16 +106,14 @@ export default function TaskItem({ item }) {
               <Text>📅 {moment(item.deadlineDate).format("YYYY-MM-DD")} </Text>
             </Col>
             <Col span={24}>
-              <Text>
-                ⌚ {item.starts} ~to~ {item.ends}
-              </Text>
+              <Text>⌚ {item.deadlineTime}</Text>
             </Col>
           </Row>
         </Row>
       </Card>
       <Modal title="Edit Task" open={isModalVisible} closable={false} footer={null}>
         <Card style={{ borderRadius: "20px" }}>
-          <Form form={form} layout="vertical" onFinish={onFinish}>
+          {/* <Form form={form} layout="vertical" onFinish={onFinish}>
             <Row gutter={[8, 8]}>
               <Col span={24}>
                 <Form.Item name="taskName" label="Task" labelCol={{ span: 24 }}>
@@ -129,17 +131,9 @@ export default function TaskItem({ item }) {
                   </Radio.Group>
                 </Form.Item>
               </Col>
-              <Col span={24}>
+              <Col xs={24} md={12}>
                 <Form.Item name="deadlineDate" label="Deadline Date">
-                  <DatePicker style={{ width: "100%" }} />
-                </Form.Item>
-              </Col>
-              <Col span={24}>
-                {/* <Form.Item name="deadlineRange" label="Time">
-                  <TimePicker.RangePicker style={{ width: "100%" }} />
-                </Form.Item> */}
-                <Form.Item name="deadlineRange" label="Time">
-                  <TimePicker.RangePicker />
+                  <DatePicker showTime style={{ width: "100%" }} />
                 </Form.Item>
               </Col>
             </Row>
@@ -152,6 +146,38 @@ export default function TaskItem({ item }) {
               <Col>
                 <Button shape="round" onClick={() => setIsModalVisible(false)}>
                   close
+                </Button>
+              </Col>
+            </Row>
+          </Form> */}
+          <Form form={form} layout="horizontal" onFinish={onFinish}>
+            <Row gutter={[8, 8]}>
+              <Col xs={24}>
+                <Form.Item name="taskName" label="Task" labelCol={{ span: 24 }}>
+                  <TextArea />
+                </Form.Item>
+              </Col>
+              <Col xs={24}>
+                <Form.Item name="priority" label="Priority">
+                  <Radio.Group>
+                    {rating.map((el) => (
+                      <Radio key={el} value={el}>
+                        {el}
+                      </Radio>
+                    ))}
+                  </Radio.Group>
+                </Form.Item>
+              </Col>
+              <Col xs={24}>
+                <Form.Item name="deadlineDate" defaultValue={moment(item?.deadlineDate).format("YYYY-MM-DD HH:mm:ss")} label="Deadline Date">
+                  <DatePicker showTime style={{ width: "100%" }} />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row justify="end">
+              <Col>
+                <Button shape="round" htmlType="submit">
+                  Add Item
                 </Button>
               </Col>
             </Row>

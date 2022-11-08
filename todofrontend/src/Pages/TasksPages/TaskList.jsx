@@ -11,6 +11,7 @@ export default function TaskList() {
   useEffect(() => {
     getTasks();
   }, []);
+  // console.log("From TaskList Token : ", localStorage.getItem("token"));
 
   return (
     <>
@@ -20,6 +21,7 @@ export default function TaskList() {
         <Card style={{ border: "none" }}>
           <Row gutter={[8, 8]}>
             {initialTask?.map((el) => (
+              // console.log("Element : ", el.id)
               <Col xs={24} sm={12} md={8} key={el?.id}>
                 <TaskItem item={el} />
               </Col>

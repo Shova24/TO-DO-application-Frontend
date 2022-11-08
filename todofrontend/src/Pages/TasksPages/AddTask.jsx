@@ -8,11 +8,6 @@ const rating = ["High", "Medium", "Low"];
 export default function AddTask() {
   const { addItem } = useContext(TaskContext);
   const [form] = Form.useForm();
-
-  const onOk = (value) => {
-    // console.log("onOk: ", value);
-    // console.log("====================================");
-  };
   return (
     <Card style={{ border: "none" }}>
       <Form form={form} layout="horizontal" onFinish={addItem}>
@@ -35,7 +30,7 @@ export default function AddTask() {
           </Col>
           <Col xs={24} md={12}>
             <Form.Item name="deadlineDate" label="Deadline Date">
-              <DatePicker showTime onOk={onOk} style={{ width: "100%" }} />
+              <DatePicker showTime style={{ width: "100%" }} />
             </Form.Item>
           </Col>
         </Row>

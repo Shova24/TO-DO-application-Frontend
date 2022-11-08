@@ -6,10 +6,19 @@ const { Header, Footer, Content } = Layout;
 const { Title, Text } = Typography;
 export default function BaseLayout({ children }) {
   const location = useLocation();
-  const [currentKey, setCurrentKey] = useState("");
+
+  // console.log("location : ", location.pathname);
+
+  let initial;
+  if (location.pathname == "/") initial = "Home";
+  if (location.pathname == "/deleted-tasks") initial = "Trash";
+  // console.log("Initial : ", initial);
+  const [currentKey, setCurrentKey] = useState(initial);
+  // console.log("current key : " + currentKey);
 
   useEffect(() => {
-    setCurrentKey(location.pathname);
+    if (location.pathname == "/") setCurrentKey("Home");
+    if (location.pathname == "deleted-tasks") setCurrentKey("Trash");
   }, [location.pathname]);
 
   const userLogout = async () => {
@@ -18,6 +27,17 @@ export default function BaseLayout({ children }) {
     const token = localStorage.getItem("token");
     console.log(token);
   };
+
+  const menuItems = [
+    {
+      key: "Home",
+      label: <Link to={"/"}>Home</Link>,
+    },
+    {
+      key: "Trash",
+      label: <Link to={"/deleted-tasks"}>Trash List</Link>,
+    },
+  ];
 
   return (
     <Layout>
@@ -37,14 +57,7 @@ export default function BaseLayout({ children }) {
         </Row>
       </Header>
       <Content style={{ minHeight: " 100vh" }}>
-        <Menu mode="horizontal" defaultSelectedKeys={[currentKey]} style={{ display: "flex", justifyContent: "center" }}>
-          <Menu.Item>
-            <Link to={"/"}>Home</Link>
-          </Menu.Item>
-          <Menu.Item>
-            <Link to={"/deleted-tasks"}>Trash List</Link>
-          </Menu.Item>
-        </Menu>
+        <Menu mode="horizontal" style={{ display: "flex", justifyContent: "center" }} defaultSelectedKeys={[currentKey]} items={menuItems} />
         <Card
           style={{
             justifyContent: "center",
