@@ -12,6 +12,8 @@ export default function TaskList() {
     getTasks();
   }, []);
   // console.log("From TaskList Token : ", localStorage.getItem("token"));
+  // const parseJwt = JSON.parse(atob(localStorage.getItem("token").split(".")[1]));
+  // console.log("ParseJwt : ", parseJwt);
 
   return (
     <>

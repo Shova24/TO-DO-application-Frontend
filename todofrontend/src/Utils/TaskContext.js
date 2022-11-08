@@ -63,25 +63,18 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
-  const updateApi = async (updatedTask, item) => {
-    // setShowLoader(true);
-    // const response = await fetch(``, {
-    //   method: "PATCH",
-    //   body: JSON.stringify(updatedTask),
-    //   headers: {
-    //     "Content-type": "application/json",
-    //   },
-    // });
-    // console.log(response.status);
-    // if (response.status === 200) {
-    //   const data = await response.json();
-    //   setInitialTask(data);
-    //   // setShowLoader(false);
-    //   return;
-    // } else {
-    //   // setShowLoader(false);
-    //   return await Promise.reject(response);
-    // }
+  const updateApi = async (updatedTask, taskID) => {
+    try {
+      setShowLoader(true);
+      const response = await BaseAPI.patch(`task/update-task/${taskID}`, updatedTask);
+      const updatedItem = initialTask.filter((el) => el.id !== updatedTask.id);
+      console.log(updatedItem);
+      updatedItem.push(response?.data?.message);
+      setInitialTask(updatedItem);
+      setShowLoader(false);
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   const redo = async (taskID) => {

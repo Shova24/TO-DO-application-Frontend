@@ -7,7 +7,10 @@ const PrivateRoutes = () => {
   if (token === "null") {
     auth = false;
   }
-
+  const parseJwt = JSON.parse(atob(token.split(".")[1]));
+  if (parseJwt.exp * 1000 < Date.now()) {
+    return <Navigate to="/login" />;
+  }
   // console.log(token);
   return auth ? <Outlet /> : <Navigate to="/login" />;
 };
