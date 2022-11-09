@@ -2,19 +2,16 @@ import { Card, Layout, Typography, Menu, Row, Col } from "antd";
 import React, { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { Notification } from "../Components/Notification";
-const { Header, Footer, Content } = Layout;
+const { Header, Content } = Layout;
 const { Title, Text } = Typography;
 export default function BaseLayout({ children }) {
   const location = useLocation();
 
-  // console.log("location : ", location.pathname);
-
   let initial;
   if (location.pathname == "/") initial = "Home";
   if (location.pathname == "/deleted-tasks") initial = "Trash";
-  // console.log("Initial : ", initial);
+
   const [currentKey, setCurrentKey] = useState(initial);
-  // console.log("current key : " + currentKey);
 
   useEffect(() => {
     if (location.pathname == "/") setCurrentKey("Home");

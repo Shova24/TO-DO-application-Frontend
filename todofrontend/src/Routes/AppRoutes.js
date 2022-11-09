@@ -10,6 +10,7 @@ import DeletedTaskList from "../Pages/TasksPages/DeletedTaskList";
 import BaseLayout from "../Layoutes/BaseLayout";
 import AuthLayOut from "../Layoutes/AuthLayout";
 import PageNotFount from "../Pages/PageNotFound";
+import HomePage from "../Pages/TasksPages/HomePage";
 
 export default function AppRoutes() {
   return (
@@ -18,8 +19,7 @@ export default function AppRoutes() {
         <Route
           element={
             <BaseLayout>
-              <AddTask />
-              <TaskList />
+              <HomePage />
             </BaseLayout>
           }
           exact
